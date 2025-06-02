@@ -1,12 +1,11 @@
-import { MongoClient } from 'mongodb'
+import clientPromise from '@/lib/mongodb'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
   try {
-    const client = await MongoClient.connect(process.env.MONGODB_URI!)
+    const client = await clientPromise
     const db = client.db()
     const products = await db.collection('products').find().toArray()
-    await client.close()
 
     return NextResponse.json(products)
   } catch (error) {

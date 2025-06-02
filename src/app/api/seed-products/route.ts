@@ -1,10 +1,9 @@
-// app/api/seed-products/route.ts
 import { NextResponse } from 'next/server'
-import {MongoClient} from "mongodb";
+import clientPromise from '@/lib/mongodb'
 
 export async function GET() {
     try {
-        const client = await MongoClient.connect(process.env.MONGODB_URI!)
+        const client = await clientPromise
         const db = client.db()
 
         const sampleProducts = Array.from({ length: 10 }, (_, i) => ({

@@ -1,11 +1,11 @@
-import { MongoClient } from 'mongodb'
+import clientPromise from '@/lib/mongodb'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   try {
     const { code } = await request.json()
-    
-    const client = await MongoClient.connect(process.env.MONGODB_URI!)
+
+    const client = await clientPromise
     const db = client.db()
     
     const discount = await db.collection('discounts').findOne({ 
@@ -13,8 +13,6 @@ export async function POST(request: Request) {
       active: true,
       expiresAt: { $gt: new Date() }
     })
-    
-    await client.close()
 
     if (!discount) {
       return NextResponse.json(

@@ -1,5 +1,6 @@
-import { MongoClient, ObjectId } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import { NextRequest, NextResponse } from 'next/server'
+import clientPromise from '@/lib/mongodb'
 
 function isValidObjectId(id: string): boolean {
   return /^[a-f\d]{24}$/i.test(id)
@@ -16,14 +17,12 @@ export async function GET(
   }
 
   try {
-    const client = await MongoClient.connect(process.env.MONGODB_URI!)
+    const client = await clientPromise
     const db = client.db()
 
     const product = await db.collection('products').findOne({
       _id: new ObjectId(id),
     })
-
-    await client.close()
 
     if (!product) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 })

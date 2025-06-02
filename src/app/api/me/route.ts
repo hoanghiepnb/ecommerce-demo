@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth/options"
 import { NextResponse } from "next/server"
-import {MongoClient} from "mongodb";
+import clientPromise from '@/lib/mongodb'
 
 export async function GET() {
     const session = await getServerSession(authOptions)
@@ -11,7 +11,7 @@ export async function GET() {
     }
 
     try {
-        const client = await MongoClient.connect(process.env.MONGODB_URI!)
+        const client = await clientPromise
         const db = client.db()
         const user = await db.collection("users").findOne(
             { email: session.user.email },
@@ -36,7 +36,7 @@ export async function PUT(req: Request) {
 
     const updates = await req.json()
     try {
-        const client = await MongoClient.connect(process.env.MONGODB_URI!)
+        const client = await clientPromise
         const db = client.db()
 
         await db.collection("users").updateOne(

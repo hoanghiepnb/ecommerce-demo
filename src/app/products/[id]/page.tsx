@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
-import { MongoClient, ObjectId } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import ProductClient from './ProductClient'
+import clientPromise from '@/lib/mongodb'
 
 type Props = {
   params: Promise<{ id: string }>
@@ -16,12 +17,11 @@ export async function generateMetadata(
   console.log(searchParams)
 
   try {
-    const client = await MongoClient.connect(process.env.MONGODB_URI!)
+    const client = await clientPromise
     const db = client.db()
     const product = await db.collection('products').findOne({
       _id: new ObjectId(id),
     })
-    await client.close()
 
     if (!product) {
       return {
