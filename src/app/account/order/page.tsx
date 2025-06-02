@@ -23,7 +23,7 @@ export default function AccountPage() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        fetch('/api/orders')
+        fetch('/api/account/orders')
             .then(res => res.json())
             .then(data => {
                 if (!Array.isArray(data)) throw new Error('Invalid response')

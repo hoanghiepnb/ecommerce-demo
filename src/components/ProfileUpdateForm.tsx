@@ -16,7 +16,7 @@ export default function ProfileUpdateForm() {
     const [success, setSuccess] = useState(false)
 
     useEffect(() => {
-        axios.get('/api/me').then((res) => {
+        axios.get('/api/account/profile').then((res) => {
             const data = res.data
             setFormData({
                 name: data.name ?? '',
@@ -38,7 +38,7 @@ export default function ProfileUpdateForm() {
         e.preventDefault()
         setLoading(true)
         try {
-            await axios.put('/api/me', formData)
+            await axios.put('/api/account/profile', formData)
             setSuccess(true)
         } catch (err) {
             console.error('Failed to update profile', err)
